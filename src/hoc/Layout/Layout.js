@@ -1,12 +1,11 @@
 import React from 'react';
 import Auxiliary from '../Auxiliary/Auxiliary';
-import ScoreDisplayer from '../../components/ScoreDisplayer/ScoreDisplayer';
+import ScoreManager from '../../components/ScoreManager/ScoreManager';
 
 const layout = (props) => (
   <Auxiliary>
     <div>Toolbar, SideDrawer, Backdrop, Mélanie</div>
-    <div id='boo'></div>
-    <ScoreDisplayer></ScoreDisplayer>
+    <ScoreManager />
     <main>{props.children}</main>
   </Auxiliary>
 );
