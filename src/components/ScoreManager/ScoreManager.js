@@ -15,14 +15,20 @@ class ScoreManager extends Component {
     },
   };
 
+  // Switches the score based on select value.
+  switchScoreHandler = (event) => {
+    this.setState({
+      file: event.target.value,
+    });
+  };
+
   render() {
     return (
       <div>
-        <select>
+        <select value={this.state.file} onChange={this.switchScoreHandler}>
           <SelectOption options={this.state.scores} />
         </select>
-
-        <Score selectedScore={singlesXML} />
+        <Score selectedScore={this.state.file} />
       </div>
     );
   }
