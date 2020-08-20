@@ -1,15 +1,86 @@
 import React, { Component } from 'react';
+import Button from '../../../../components/UI/Button/Button';
 
 class Metronome extends Component {
+  state = {
+    bpm: 80,
+    disableIncrem: false,
+    disableDecrem: false,
+  };
+
+  /**
+   * Increments the bpm state value based on the event
+   *  @param {event} event An event triggered somewhere in the related JSX
+   */
+  incrementBPMHandler = () => {
+    let prevBPM = this.state.bpm;
+    const updatedBPM = prevBPM + 1;
+    this.setState({ bpm: updatedBPM });
+    this.updateButtonAccessibility(updatedBPM);
+  };
+
+  /**
+   * Decrements the bpm state value based on the event
+   *  @param {event} event An event triggered somewhere in the related JSX
+   */
+  decrementBPMHandler = () => {
+    let prevBPM = this.state.bpm;
+    const updatedBPM = prevBPM - 1;
+    this.setState({ bpm: updatedBPM });
+    this.updateButtonAccessibility(updatedBPM);
+  };
+
+  /**
+   * Updates the bpm state value based on the event value
+   *  @param {event} event An event triggered somewhere in the related JSX
+   */
+  changeBPMHandler = (event) => {
+    if (
+      parseInt(event.target.value) &&
+      parseInt(event.target.value) <= 500 &&
+      parseInt(event.target.value) > 0
+    ) {
+      this.setState({ bpm: parseInt(event.target.value) });
+      this.updateButtonAccessibility(event.target.value);
+    }
+    if (event.target.value === '') {
+      this.setState({ bpm: 0 });
+      this.updateButtonAccessibility(event.target.value);
+    }
+  };
+
+  /**
+   * Enables or Disables incremental and decremental button based on bpm value
+   *  @param {number} bpm Beats Per Minute
+   */
+  updateButtonAccessibility(bpm) {
+    this.setState({
+      disableIncrem: bpm >= 500,
+      disableDecrem: bpm < 2,
+    });
+  }
+
   render() {
     return (
       <div>
-        <label>Tempo :</label>
+        <label>Tempo : </label>
         <input
           type='text'
-          value={this.props.bpm}
-          onChange={this.props.change}
+          value={this.state.bpm}
+          onChange={this.changeBPMHandler}
         />
+        <Button
+          clicked={this.incrementBPMHandler}
+          disabled={this.state.disableIncrem}
+        >
+          +
+        </Button>
+        <Button
+          clicked={this.decrementBPMHandler}
+          disabled={this.state.disableDecrem}
+        >
+          -
+        </Button>
       </div>
     );
   }

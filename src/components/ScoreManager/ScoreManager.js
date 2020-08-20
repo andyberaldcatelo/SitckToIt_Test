@@ -14,30 +14,16 @@ class ScoreManager extends Component {
       doubles: doublesXML,
       paradiddles: paradiddlesXML,
     },
-    bpm: 80,
   };
 
-  // Switches the score based on select value.
   /**
+   * Switches the score based on select value.
    *  @param {event} event An event triggered somewhere in the related JSX
    */
   switchScoreHandler = (event) => {
     this.setState({
       file: event.target.value,
     });
-  };
-
-  changeBPMHandler = (event) => {
-    if (
-      parseInt(event.target.value) &&
-      parseInt(event.target.value) <= 500 &&
-      parseInt(event.target.value) > 0
-    ) {
-      this.setState({ bpm: parseInt(event.target.value) });
-    }
-    if (event.target.value === '') {
-      this.setState({ bpm: 0 });
-    }
   };
 
   render() {
@@ -47,10 +33,7 @@ class ScoreManager extends Component {
           <SelectOption options={this.state.scores} />
         </select>
         <Score selectedScore={this.state.file} />
-        <ScoreControls
-          bpm={this.state.bpm}
-          onChangeBPM={this.changeBPMHandler}
-        />
+        <ScoreControls />
       </div>
     );
   }
