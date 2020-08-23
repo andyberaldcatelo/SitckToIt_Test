@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
 import Button from '../../../../components/UI/Button/Button';
 import Slider from '../../../../components/UI/Slider/Slider';
+import click1 from '../../../../assets/sounds/click1.wav';
+import click2 from '../../../../assets/sounds/click2.wav';
 
 class Metronome extends Component {
-  state = {
-    bpm: 80,
-    disableIncrem: false,
-    disableDecrem: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      bpm: 80,
+      disableIncrem: false,
+      disableDecrem: false,
+      playing: false,
+    };
+    this.click1 = new Audio(click1);
+    this.click2 = new Audio(click2);
+    this.timer = null;
+  }
 
   /**
    * Increments the bpm state value based on the event
@@ -18,6 +27,8 @@ class Metronome extends Component {
     const updatedBPM = prevBPM + 1;
     this.setState({ bpm: updatedBPM });
     this.updateButtonAccessibility(updatedBPM);
+    this.stopMetronomeHandler();
+    this.startMetronomeHandler();
   };
 
   /**
@@ -29,6 +40,8 @@ class Metronome extends Component {
     const updatedBPM = prevBPM - 1;
     this.setState({ bpm: updatedBPM });
     this.updateButtonAccessibility(updatedBPM);
+    this.stopMetronomeHandler();
+    this.startMetronomeHandler();
   };
 
   /**
@@ -36,17 +49,13 @@ class Metronome extends Component {
    *  @param {event} event An event triggered somewhere in the related JSX
    */
   changeBPMHandler = (event) => {
-    if (
-      parseInt(event.target.value) &&
-      parseInt(event.target.value) <= 500 &&
-      parseInt(event.target.value) > 19
-    ) {
-      this.setState({ bpm: parseInt(event.target.value) });
-      this.updateButtonAccessibility(event.target.value);
-    }
-    if (event.target.value === '') {
-      this.setState({ bpm: 20 });
-      this.updateButtonAccessibility(event.target.value);
+    this.setState({ bpm: parseInt(event.target.value) });
+    this.updateButtonAccessibility(event.target.value);
+
+    // If the metronome is launched, we have to stop it to re-launched it with the new state value
+    if (this.state.playing) {
+      this.stopMetronomeHandler();
+      this.startMetronomeHandler();
     }
   };
 
@@ -60,6 +69,23 @@ class Metronome extends Component {
       disableDecrem: bpm < 21,
     });
   }
+
+  startStopHandler = () => {
+    let inverted = !this.state.playing;
+    this.setState({ playing: inverted });
+    this.state.playing
+      ? this.stopMetronomeHandler()
+      : this.startMetronomeHandler();
+  };
+
+  startMetronomeHandler = () => {
+    // this.click2.play();
+    this.timer = setInterval(() => this.click2.play(), 60000 / this.state.bpm);
+  };
+
+  stopMetronomeHandler = () => {
+    clearInterval(this.timer);
+  };
 
   render() {
     return (
@@ -85,6 +111,9 @@ class Metronome extends Component {
           bpm={this.state.bpm}
           change={this.changeBPMHandler}
         />
+        <Button clicked={this.startStopHandler}>
+          {this.state.playing ? 'Stop' : 'Play'}
+        </Button>
       </div>
     );
   }
