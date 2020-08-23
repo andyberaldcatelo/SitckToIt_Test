@@ -28,7 +28,7 @@ class Metronome extends Component {
     this.setState({ bpm: updatedBPM });
     this.updateButtonAccessibility(updatedBPM);
     this.stopMetronomeHandler();
-    this.startMetronomeHandler();
+    this.startMetronomeHandler(updatedBPM);
   };
 
   /**
@@ -41,7 +41,7 @@ class Metronome extends Component {
     this.setState({ bpm: updatedBPM });
     this.updateButtonAccessibility(updatedBPM);
     this.stopMetronomeHandler();
-    this.startMetronomeHandler();
+    this.startMetronomeHandler(updatedBPM);
   };
 
   /**
@@ -50,12 +50,12 @@ class Metronome extends Component {
    */
   changeBPMHandler = (event) => {
     this.setState({ bpm: parseInt(event.target.value) });
-    this.updateButtonAccessibility(event.target.value);
+    this.updateButtonAccessibility(parseInt(event.target.value));
 
     // If the metronome is launched, we have to stop it to re-launched it with the new state value
     if (this.state.playing) {
       this.stopMetronomeHandler();
-      this.startMetronomeHandler();
+      this.startMetronomeHandler(parseInt(event.target.value));
     }
   };
 
@@ -65,7 +65,7 @@ class Metronome extends Component {
    */
   updateButtonAccessibility(bpm) {
     this.setState({
-      disableIncrem: bpm >= 500,
+      disableIncrem: bpm >= 250,
       disableDecrem: bpm < 21,
     });
   }
@@ -75,16 +75,19 @@ class Metronome extends Component {
     this.setState({ playing: inverted });
     this.state.playing
       ? this.stopMetronomeHandler()
-      : this.startMetronomeHandler();
+      : this.startMetronomeHandler(this.state.bpm);
   };
 
-  startMetronomeHandler = () => {
+  startMetronomeHandler = (bpm) => {
     // this.click2.play();
-    this.timer = setInterval(() => this.click2.play(), 60000 / this.state.bpm);
+    console.log('tempo:' + bpm);
+    console.log(Math.round(60000 / bpm) + 'ms');
+    this.timer = setInterval(() => this.click2.play(), Math.round(60000 / bpm));
   };
 
   stopMetronomeHandler = () => {
     clearInterval(this.timer);
+    this.timer = null;
   };
 
   render() {
@@ -107,7 +110,7 @@ class Metronome extends Component {
         </Button>
         <Slider
           minValueSlider='20'
-          maxValueSlider='500'
+          maxValueSlider='250'
           bpm={this.state.bpm}
           change={this.changeBPMHandler}
         />
