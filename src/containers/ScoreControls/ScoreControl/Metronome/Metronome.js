@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Button from '../../../../components/UI/Button/Button';
+import Slider from '../../../../components/UI/Slider/Slider';
 
 class Metronome extends Component {
   state = {
@@ -38,13 +39,13 @@ class Metronome extends Component {
     if (
       parseInt(event.target.value) &&
       parseInt(event.target.value) <= 500 &&
-      parseInt(event.target.value) > 0
+      parseInt(event.target.value) > 19
     ) {
       this.setState({ bpm: parseInt(event.target.value) });
       this.updateButtonAccessibility(event.target.value);
     }
     if (event.target.value === '') {
-      this.setState({ bpm: 0 });
+      this.setState({ bpm: 20 });
       this.updateButtonAccessibility(event.target.value);
     }
   };
@@ -56,19 +57,16 @@ class Metronome extends Component {
   updateButtonAccessibility(bpm) {
     this.setState({
       disableIncrem: bpm >= 500,
-      disableDecrem: bpm < 2,
+      disableDecrem: bpm < 21,
     });
   }
 
   render() {
     return (
       <div>
-        <label>Tempo : </label>
-        <input
-          type='text'
-          value={this.state.bpm}
-          onChange={this.changeBPMHandler}
-        />
+        <label>
+          Tempo : <strong>{this.state.bpm} </strong>
+        </label>
         <Button
           clicked={this.incrementBPMHandler}
           disabled={this.state.disableIncrem}
@@ -81,6 +79,12 @@ class Metronome extends Component {
         >
           -
         </Button>
+        <Slider
+          minValueSlider='20'
+          maxValueSlider='500'
+          bpm={this.state.bpm}
+          change={this.changeBPMHandler}
+        />
       </div>
     );
   }
