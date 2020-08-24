@@ -27,8 +27,10 @@ class Metronome extends Component {
     const updatedBPM = prevBPM + 1;
     this.setState({ bpm: updatedBPM });
     this.updateButtonAccessibility(updatedBPM);
-    this.stopMetronomeHandler();
-    this.startMetronomeHandler(updatedBPM);
+    if (this.state.playing) {
+      this.stopMetronomeHandler();
+      this.startMetronomeHandler(updatedBPM);
+    }
   };
 
   /**
@@ -40,8 +42,11 @@ class Metronome extends Component {
     const updatedBPM = prevBPM - 1;
     this.setState({ bpm: updatedBPM });
     this.updateButtonAccessibility(updatedBPM);
-    this.stopMetronomeHandler();
-    this.startMetronomeHandler(updatedBPM);
+
+    if (this.state.playing) {
+      this.stopMetronomeHandler();
+      this.startMetronomeHandler(updatedBPM);
+    }
   };
 
   /**
@@ -70,6 +75,9 @@ class Metronome extends Component {
     });
   }
 
+  /**
+   * Starts or stops the metronome based when the button is clicked.
+   */
   startStopHandler = () => {
     let inverted = !this.state.playing;
     this.setState({ playing: inverted });
@@ -78,13 +86,17 @@ class Metronome extends Component {
       : this.startMetronomeHandler(this.state.bpm);
   };
 
+  /**
+   * Starts the actual metronome.
+   * @param {number} bpm Beats Per Minute
+   */
   startMetronomeHandler = (bpm) => {
-    // this.click2.play();
-    console.log('tempo:' + bpm);
-    console.log(Math.round(60000 / bpm) + 'ms');
     this.timer = setInterval(() => this.click2.play(), Math.round(60000 / bpm));
   };
 
+  /**
+   * Stops the metronome and reinitializes the Interval
+   */
   stopMetronomeHandler = () => {
     clearInterval(this.timer);
     this.timer = null;
