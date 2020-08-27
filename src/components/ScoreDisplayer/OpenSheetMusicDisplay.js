@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { OpenSheetMusicDisplay as OSMD } from 'opensheetmusicdisplay';
+import classes from './OSMD.module.css';
 
 class OpenSheetMusicDisplay extends Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class OpenSheetMusicDisplay extends Component {
   }
 
   render() {
-    return <div ref={this.divRef} />;
+    return <div className={classes.OSMD} ref={this.divRef} />;
   }
 }
 

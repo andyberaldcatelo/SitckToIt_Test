@@ -3,6 +3,7 @@ import Button from '../../../../components/UI/Button/Button';
 import Slider from '../../../../components/UI/Slider/Slider';
 import click1 from '../../../../assets/sounds/click1.wav';
 import click2 from '../../../../assets/sounds/click2.wav';
+import classes from './Metronome.module.css';
 
 class Metronome extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class Metronome extends Component {
       disableIncrem: false,
       disableDecrem: false,
       playing: false,
+      counter: 1,
     };
     this.click1 = new Audio(click1);
     this.click2 = new Audio(click2);
@@ -25,8 +27,9 @@ class Metronome extends Component {
   incrementBPMHandler = () => {
     let prevBPM = this.state.bpm;
     const updatedBPM = prevBPM + 1;
-    this.setState({ bpm: updatedBPM });
+    this.setState({ bpm: updatedBPM, counter: 1 });
     this.updateButtonAccessibility(updatedBPM);
+
     if (this.state.playing) {
       this.stopMetronomeHandler();
       this.startMetronomeHandler(updatedBPM);
@@ -40,7 +43,7 @@ class Metronome extends Component {
   decrementBPMHandler = () => {
     let prevBPM = this.state.bpm;
     const updatedBPM = prevBPM - 1;
-    this.setState({ bpm: updatedBPM });
+    this.setState({ bpm: updatedBPM, counter: 1 });
     this.updateButtonAccessibility(updatedBPM);
 
     if (this.state.playing) {
@@ -91,7 +94,10 @@ class Metronome extends Component {
    * @param {number} bpm Beats Per Minute
    */
   startMetronomeHandler = (bpm) => {
-    this.timer = setInterval(() => this.click2.play(), Math.round(60000 / bpm));
+    this.timer = setInterval(
+      () => this.soundSwitchHandler(),
+      Math.round(60000 / bpm)
+    );
   };
 
   /**
@@ -100,23 +106,44 @@ class Metronome extends Component {
   stopMetronomeHandler = () => {
     clearInterval(this.timer);
     this.timer = null;
+    this.setState({ counter: 1 });
+  };
+
+  soundSwitchHandler = () => {
+    let newValue = this.state.counter;
+    console.log(this.state.counter);
+    if (this.state.counter === 1) {
+      newValue++;
+      this.setState({ counter: newValue });
+      this.click2.play();
+    } else {
+      newValue++;
+      this.setState({ counter: newValue });
+      this.click1.play();
+    }
+
+    if (this.state.counter === 5) {
+      this.setState({ counter: 1 });
+    }
   };
 
   render() {
     return (
-      <div>
-        <label>
-          Tempo : <strong>{this.state.bpm} </strong>
+      <div className={classes.Metronome}>
+        <label className={classes.Label}>
+          Tempo : <strong className={classes.Tempo}>{this.state.bpm} </strong>
         </label>
         <Button
           clicked={this.incrementBPMHandler}
           disabled={this.state.disableIncrem}
+          btnType='AdjustTempo'
         >
           +
         </Button>
         <Button
           clicked={this.decrementBPMHandler}
           disabled={this.state.disableDecrem}
+          btnType='AdjustTempo'
         >
           -
         </Button>
@@ -126,7 +153,10 @@ class Metronome extends Component {
           bpm={this.state.bpm}
           change={this.changeBPMHandler}
         />
-        <Button clicked={this.startStopHandler}>
+        <Button
+          btnType={this.state.playing ? 'Stop' : 'Start'}
+          clicked={this.startStopHandler}
+        >
           {this.state.playing ? 'Stop' : 'Play'}
         </Button>
       </div>

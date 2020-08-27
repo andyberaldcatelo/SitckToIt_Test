@@ -1,0 +1,19 @@
+.Metronome {
+  text-align: center;
+  background-color: lightgray;
+  border-radius: 10px;
+  width: 90%;
+  margin: auto;
+}
+Label {
+  font-size: medium;
+  font-weight: bold;
+  font-size: large;
+  text-transform: capitalize;
+}
+
+.Tempo {
+  font-size: larger;
+  font-weight: bold;
+  align-content: center;
+}

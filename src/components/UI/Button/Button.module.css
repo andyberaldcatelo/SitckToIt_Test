@@ -1,12 +1,35 @@
 .Button {
-  background-color: black;
+  background-color: lightgray;
   border: thin;
-  border-radius: 5px;
-  color: green;
+  color: black;
   outline: none;
   cursor: pointer;
   font: inherit;
   padding: 10px;
   margin: 10px;
   font-weight: bold;
+}
+
+.AdjustTempo {
+  background-color: blue;
+  width: 50px;
+  border-radius: 5px;
+  color: whitesmoke;
+  font-size: x-large;
+}
+
+.Start {
+  background-color: rgb(51, 214, 51);
+  width: 100px;
+  border-radius: 5px;
+  color: white;
+  font-size: large;
+}
+
+.Stop {
+  background-color: red;
+  width: 100px;
+  border-radius: 5px;
+  color: white;
+  font-size: large;
 }
