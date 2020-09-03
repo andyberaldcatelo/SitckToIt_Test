@@ -14,6 +14,7 @@ class Metronome extends Component {
       disableDecrem: false,
       playing: false,
       counter: 1,
+      screenCounter: null,
     };
     this.click1 = new Audio(click1);
     this.click2 = new Audio(click2);
@@ -41,6 +42,8 @@ class Metronome extends Component {
    *  @param {event} event An event triggered somewhere in the related JSX
    */
   decrementBPMHandler = () => {
+    this.stopMetronomeHandler();
+
     let prevBPM = this.state.bpm;
     const updatedBPM = prevBPM - 1;
     this.setState({ bpm: updatedBPM, counter: 1 });
@@ -111,7 +114,7 @@ class Metronome extends Component {
 
   soundSwitchHandler = () => {
     let newValue = this.state.counter;
-    console.log(this.state.counter);
+    this.setState({ screenCounter: newValue });
     if (this.state.counter === 4) {
       this.setState({ counter: 1 });
       this.click1.play();
@@ -160,6 +163,7 @@ class Metronome extends Component {
         >
           {this.state.playing ? 'Stop' : 'Play'}
         </Button>
+        <strong>{this.state.screenCounter}</strong>
       </div>
     );
   }
