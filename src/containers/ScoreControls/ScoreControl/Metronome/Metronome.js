@@ -112,18 +112,19 @@ class Metronome extends Component {
   soundSwitchHandler = () => {
     let newValue = this.state.counter;
     console.log(this.state.counter);
-    if (this.state.counter === 1) {
-      newValue++;
-      this.setState({ counter: newValue });
-      this.click2.play();
-    } else {
-      newValue++;
-      this.setState({ counter: newValue });
-      this.click1.play();
-    }
-
-    if (this.state.counter === 5) {
+    if (this.state.counter === 4) {
       this.setState({ counter: 1 });
+      this.click1.play();
+    } else {
+      if (this.state.counter === 1) {
+        newValue++;
+        this.setState({ counter: newValue });
+        this.click2.play();
+      } else {
+        newValue++;
+        this.setState({ counter: newValue });
+        this.click1.play();
+      }
     }
   };
 
